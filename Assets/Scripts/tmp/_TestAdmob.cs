@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class _TestAdmob : MonoBehaviour {
-	public AdmobController admob;
+	public AdmobManager admob;
 	//public Text text
 
 

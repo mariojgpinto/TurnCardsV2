@@ -5,7 +5,7 @@ using UnityEngine;
 //using admob;
 
 
-public class AdmobController : MonoBehaviour {
+public class AdmobManager : MonoBehaviour {
 	#region VARIABLES
 	//string appID = "ca-app-pub-6772547619228672~4666124948";
 
@@ -182,8 +182,11 @@ public class AdmobController : MonoBehaviour {
 	//}
 
 	private void OnApplicationQuit() {
-		banner.Destroy();
-		interstitial.Destroy();
+		if(banner != null)
+			banner.Destroy();
+
+		if(interstitial != null)
+			interstitial.Destroy();
 	}
 	#endregion
 }

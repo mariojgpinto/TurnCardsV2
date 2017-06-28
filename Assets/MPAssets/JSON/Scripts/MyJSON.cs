@@ -59,13 +59,17 @@ namespace MPAssets {
 
 		public static void SaveInfo<T>(T data, string path) {
 			//VALIDATE PATH?
+#if UNITY_EDITOR
 			string str = MyJSON.FormatJson(JsonUtility.ToJson(data));
+#else
+			string str = JsonUtility.ToJson(data);
+#endif
 
 			System.IO.File.WriteAllText(path, str);
 		}
-		#endregion
+#endregion
 
-		#region JSON_FORMAT
+#region JSON_FORMAT
 		private const string INDENT_STRING = "\t";
 		public static string FormatJson(string str) {
 			var indent = 0;
@@ -118,7 +122,7 @@ namespace MPAssets {
 			}
 			return sb.ToString();
 		}
-		#endregion
+#endregion
 	}
 
 	static class Extensions {

@@ -47,15 +47,4 @@ public class flip : MonoBehaviour {
 
 		Debug.Log("End");
 	}
-
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

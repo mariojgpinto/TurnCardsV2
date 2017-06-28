@@ -14,15 +14,21 @@ public class Board {
 	/// Minimum number of plays to complete the current board.
 	/// </summary>
 	public int minMoves;
+	/// <summary>
+	/// Minimum number of plays to complete the current board (user).
+	/// </summary>
+	public int userMoves = 0;
 
-	/// <summary>
-	/// Width of the current board.
-	/// </summary>
-	public int width;
-	/// <summary>
-	/// Height of the current board.
-	/// </summary>
-	public int height;
+	///// <summary>
+	///// Width of the current board.
+	///// </summary>
+	//public int width;
+	///// <summary>
+	///// Height of the current board.
+	///// </summary>
+	// int height;
+
+	public string packID = "";
 }
 
 

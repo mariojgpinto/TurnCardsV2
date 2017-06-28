@@ -138,13 +138,15 @@ public class DataCreation : MonoBehaviour {
 			while (dict.Count < requests[i].nBoards) {
 				string matrix = GenerateRandomMatrix(requests[i].width, requests[i].height, ref dict);
 
-				Board b = new Board();
-				b.matrix = matrix;
-				b.width = requests[i].width;
-				b.height = requests[i].height;
-				b.minMoves = 999;
+				if (matrix != "") {
+					Board b = new Board();
+					b.matrix = matrix;
+					//b.width = requests[i].width;
+					//b.height = requests[i].height;
+					b.minMoves = 999;
 
-				pack.boards.Add(b);
+					pack.boards.Add(b);
+				}
 			}
 
 			MPAssets.MyJSON.SaveInfo<Pack>(pack, requests[i].folder + requests[i].file);
@@ -154,7 +156,11 @@ public class DataCreation : MonoBehaviour {
 	#region UNITY_CALLBACKS
 	// Use this for initialization
 	void Start() {
-		CreateBoards();
+		//CreateBoards();
+
+		string path = Application.persistentDataPath + "/boards.txt";
+
+		Debug.Log(path);
 	}
 
 	// Update is called once per frame	
