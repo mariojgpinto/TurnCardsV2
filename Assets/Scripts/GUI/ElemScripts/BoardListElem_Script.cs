@@ -16,7 +16,7 @@ public class BoardListElem_Script : MonoBehaviour {
 	public void Initialize(Board _board, int id) {
 		board = _board;
 
-		elemNumber.text = "" + id;
+		elemNumber.text = "" + (id + 1);
 		goal.text = "" + board.minMoves;
 
 		if(board.userMoves > 0) {

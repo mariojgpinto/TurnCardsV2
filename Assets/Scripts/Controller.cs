@@ -11,6 +11,8 @@ public class Controller : Singleton<Controller> {
 
 	GUIManager uiManager;
 
+	GameManager gameManager;
+
 	AdmobManager admob;
 	#endregion
 
@@ -18,6 +20,7 @@ public class Controller : Singleton<Controller> {
 	public void Initialize() {
 		dataManager = this.GetComponent<DataManager>();
 		uiManager = this.GetComponent<GUIManager>();
+		gameManager = this.GetComponent<GameManager>();
 		admob = this.GetComponent<AdmobManager>();
 
 
@@ -25,9 +28,11 @@ public class Controller : Singleton<Controller> {
 
 		dataManager.LoadRemoteInfo();
 
-		StartCoroutine(WaitLoading());
+		gameManager.Initialize();
 
-		//admob.ShowBannerRelative();
+		//admob.
+
+		StartCoroutine(WaitLoading());
 	}
 
 	IEnumerator WaitLoading() {
@@ -57,10 +62,14 @@ public class Controller : Singleton<Controller> {
 	#region CALLBACKS
 	public void StartGame(Board board) {
 		Debug.Log("Start Game - " + board.matrix);
+		GUI_Animation.SwitchMenus(GUI_Controller.instance.gui_Boards, GUI_Controller.instance.gui_Game);
+
+		gameManager.InitializeGame(board);
 	}
 
 	public void StartTimedGame(TimePack pack, int time) {
 		Debug.Log("Start Timed Game (" + pack.boardSize + "," + pack.boardSize + ") - " + time + "seconds");
+		GUI_Animation.SwitchMenus(GUI_Controller.instance.gui_Time, GUI_Controller.instance.gui_Game);
 	}
 	#endregion
 
@@ -68,6 +77,8 @@ public class Controller : Singleton<Controller> {
 	// Use this for initialization
 	void Start() {
 		Initialize();
+
+		GUI_Animation.SwitchMenus(GUI_Controller.instance.gui_Main, GUI_Controller.instance.gui_Game);
 
 		//TimePack t = new TimePack(4);
 		//t.records.Add(new TimePackRecord() { time = 30, score = 0 });

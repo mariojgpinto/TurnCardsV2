@@ -29,6 +29,10 @@ public class Board {
 	// int height;
 
 	public string packID = "";
+
+	public int GetBoardSize() {
+		return Mathf.FloorToInt(Mathf.Sqrt(matrix.Length));
+	}
 }
 
 

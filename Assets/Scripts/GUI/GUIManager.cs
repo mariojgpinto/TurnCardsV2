@@ -95,22 +95,22 @@ public class GUIManager : Singleton<GUIManager> {
 				Debug.Log(e.id + " - SETTINGS - BUTTON CLOSE");
 				GUI_Controller.instance.gui_Settings.GetComponent<Settings_Script>().SetPanelReset(false);
 				break;
-			case "language_sideClose_Button": //SETTINGS - SIDECLOSE
-				Debug.Log(e.id + " - SETTINGS - BUTTON SIDECLOSE");
+			//case "language_sideClose_Button": //SETTINGS - SIDECLOSE
+			//	Debug.Log(e.id + " - SETTINGS - BUTTON SIDECLOSE");
 
-				break;
-			case "language_content_cancel_Button": //SETTINGS - CANCEL
-				Debug.Log(e.id + " - SETTINGS - BUTTON CANCEL");
+			//	break;
+			//case "language_content_cancel_Button": //SETTINGS - CANCEL
+			//	Debug.Log(e.id + " - SETTINGS - BUTTON CANCEL");
 
-				break;
-			case "language_content_ok_Button": //SETTINGS - OK
-				Debug.Log(e.id + " - SETTINGS - BUTTON OK");
+			//	break;
+			//case "language_content_ok_Button": //SETTINGS - OK
+			//	Debug.Log(e.id + " - SETTINGS - BUTTON OK");
 
-				break;
-			case "language_content_close_Button": //SETTINGS - CLOSE
-				Debug.Log(e.id + " - SETTINGS - BUTTON CLOSE");
+			//	break;
+			//case "language_content_close_Button": //SETTINGS - CLOSE
+			//	Debug.Log(e.id + " - SETTINGS - BUTTON CLOSE");
 
-				break;
+			//	break;
 			case "themes_sideClose_Button": //SETTINGS - SIDECLOSE
 				Debug.Log(e.id + " - SETTINGS - BUTTON SIDECLOSE");
 				GUI_Controller.instance.gui_Settings.GetComponent<Settings_Script>().SetPanelThemes(false);
@@ -290,6 +290,7 @@ public class GUIManager : Singleton<GUIManager> {
 		switch (e.id) {
 			case "top_back_Button": //GAME - BACK
 				Debug.Log(e.id + " - GAME - BUTTON BACK");
+				GUI_Animation.SwitchMenus(GUI_Controller.instance.gui_Game, GUI_Controller.instance.gui_Boards);
 
 				break;
 			case "running_bottom_settings_Button": //GAME - SETTINGS

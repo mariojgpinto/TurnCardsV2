@@ -49,9 +49,14 @@ public class AdmobManager : MonoBehaviour {
 
 	void RequestBanner() {
 		//AdRequest requestBanner = new AdRequest.Builder().Build();
+
+		//String android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+		//String deviceId = md5(android_id).toUpperCase();
+
+
 		AdRequest requestBanner = new AdRequest.Builder()
 				.AddTestDevice(AdRequest.TestDeviceSimulator)       // Simulator.
-				.AddTestDevice("2077ef9a63d2b398840261c8221a0c9b")  // My test device.
+				.AddTestDevice("68e5b8ca-eedd-4331-b7af-3235c6436249")  // My test device.
 				.Build();
 
 		// Load the banner with the request.
@@ -76,6 +81,8 @@ public class AdmobManager : MonoBehaviour {
 
 	private void Banner_OnAdLoaded(object sender, System.EventArgs e) {
 		Debug.Log("Banner - OnAdLoaded");
+
+		ShowBannerRelative();
 	}
 	#endregion
 
@@ -173,7 +180,7 @@ public class AdmobManager : MonoBehaviour {
 	#region UNITY_CALLBACKS
 	// Use this for initialization
 	void Start () {
-		//Initialize();
+		Initialize();
 	}
 
 	//// Update is called once per frame

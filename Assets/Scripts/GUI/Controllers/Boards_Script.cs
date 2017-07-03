@@ -23,7 +23,7 @@ public class Boards_Script : MonoBehaviour {
 
 		title.text = pack.title;
 
-		for (int i = 0; i < pack.boards.Count; ++i) {
+		for (int i = 0; i < pack.boards.Count; ) {
 			GameObject board = Instantiate(prefabBoardSet, panelScroll.transform);
 
 			//List<GameObject> elements = new List<GameObject>();
