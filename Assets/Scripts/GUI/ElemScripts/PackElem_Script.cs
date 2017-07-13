@@ -45,9 +45,9 @@ public class PackElem_Script : MonoBehaviour {
 	#region BUTTON_CALLBACK
 	void OnButtonClicked() {
 		Debug.Log("Click: " + pack.title);
-		GUI_Controller.instance.gui_Boards.GetComponent<Boards_Script>().Initialize(pack);
-
 		GUI_Animation.SwitchMenus(GUI_Controller.instance.gui_Levels, GUI_Controller.instance.gui_Boards);
+
+		GUI_Controller.instance.gui_Boards.GetComponent<Boards_Script>().Initialize(pack);
 	}
 	#endregion
 }

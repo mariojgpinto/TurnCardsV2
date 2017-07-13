@@ -2,12 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public struct SizeBoardList {
+	public int size;
+	public List<Board> boards;
+}
+
 [System.Serializable]
 public class Data {
 	#region VARIABLES
 	[System.NonSerialized]
 	public Macros.DATA_STATE boards_state = Macros.DATA_STATE.NOT_LOADED;
 	public List<Board> boards = new List<Board>();
+	List<SizeBoardList> boardsPerSize = new List<SizeBoardList>();
 
 	[System.NonSerialized]
 	public Macros.DATA_STATE packs_state = Macros.DATA_STATE.NOT_LOADED;
@@ -17,6 +23,25 @@ public class Data {
 	#endregion
 
 	#region SETUP
+	void InitializePerBoardLists() {
+		for (int i = 0; i < boards.Count; ++i) {
+			int boardSize = boards[i].GetBoardSize();
+			int idx = GetBoardSizeListIdx(boardSize);
+
+			if(idx >= 0) {
+				boardsPerSize[idx].boards.Add(boards[i]);
+			}
+			else {
+				SizeBoardList newList = new SizeBoardList();
+				newList.size = boardSize;
+				newList.boards = new List<Board>();
+				newList.boards.Add(boards[i]);
+
+				boardsPerSize.Add(newList);
+			}
+		}
+	}
+
 	public bool UpdateBoard(Board board) {
 		bool hasChanged = false;
 		int index = GetBoardIndex(board);
@@ -70,6 +95,16 @@ public class Data {
 		return -1;
 	}
 
+	public int GetBoardIndex(string matrix) {
+		for (int i = 0; i < boards.Count; ++i) {
+			if (boards[i].matrix == matrix) {
+				return i;
+			}
+		}
+
+		return -1;
+	}
+
 	public int GetPackIndex(string title) {
 		for (int i = 0; i < packs.Count; ++i) {
 			if (packs[i].title == title) {
@@ -112,6 +147,55 @@ public class Data {
 		packs_state = Macros.DATA_STATE.LOADED;
 
 		DataManager.instance.SaveLocalInfo();
+	}
+	#endregion
+
+	#region ACCESS
+	public Board GetNextBoard(Board currentBoard) {
+		int packIdx = GetPackIndex(currentBoard.packID);
+
+		if(packIdx >= 0) {
+			Pack pack = packs[packIdx];
+
+			return pack.GetNextBoard(currentBoard);
+		}
+
+		return null;
+	}
+
+	public Board GetPreviousBoard(Board currentBoard) {
+		int packIdx = GetPackIndex(currentBoard.packID);
+
+		if (packIdx >= 0) {
+			Pack pack = packs[packIdx];
+
+			return pack.GetPreviousBoard(currentBoard);
+		}
+
+		return null;
+	}
+
+	public Board GetRandomBoard(int size) {
+		if(boardsPerSize.Count == 0) {
+			InitializePerBoardLists();
+		}
+		int idx = GetBoardSizeListIdx(size);
+
+		if(idx >= 0) {
+			int boardIdx = Random.Range(0, boardsPerSize[idx].boards.Count);
+			return boardsPerSize[idx].boards[boardIdx];
+		}
+		else {
+			return null;
+		}
+	}
+
+	int GetBoardSizeListIdx(int size) {
+		for(int i = 0; i < boardsPerSize.Count; ++i) {
+			if (boardsPerSize[i].size == size)
+				return i;
+		}
+		return -1;
 	}
 	#endregion
 }

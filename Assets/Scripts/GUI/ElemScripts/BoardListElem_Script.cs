@@ -38,7 +38,7 @@ public class BoardListElem_Script : MonoBehaviour {
 
 	#region CALLBACKS
 	public void OnButtonPressed() {
-		Controller.instance.StartGame(board);
+		Controller.instance.StartRegularGame(elemNumber.text, board);
 	}
 	#endregion
 }

@@ -13,6 +13,7 @@ public class Time_Script : MonoBehaviour {
 	public TimePack currentPack;
 
 	bool initialized = false;
+	List<TimeBoardSizeElem_Script> timeElement = new List<TimeBoardSizeElem_Script>();
 	#endregion
 
 	#region SETUP
@@ -25,6 +26,7 @@ public class Time_Script : MonoBehaviour {
 				GameObject go = Instantiate(boardSizePrefab, boardSizeParent.transform, false);
 
 				go.GetComponent<TimeBoardSizeElem_Script>().Inititalize(pack);
+				timeElement.Add(go.GetComponent<TimeBoardSizeElem_Script>());
 				go.GetComponent<Toggle>().isOn = first;
 				
 				if (first) {
@@ -35,9 +37,13 @@ public class Time_Script : MonoBehaviour {
 
 			initialized = true;
 		}
+		else {
+			SetSelectedSize(currentPack);
+		}
 	}
 
 	public void SetSelectedSize(TimePack pack) {
+		Debug.Log("Selected Size: " + pack.boardSize);
 		currentPack = pack;
 
 		boardSizeTitle.text = currentPack.title;

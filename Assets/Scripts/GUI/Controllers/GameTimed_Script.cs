@@ -1,19 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using MPAssets;
 
-[Prefab("GameManager", true)]
-public class GameManager : Singleton<GameManager> {
+public class GameTimed_Script : MonoBehaviour {
 	#region VARIABLES
 	public const int maxSize = 8;
+
 	public GameObject cardPrefab;
-	public GameObject cardParent;
-	public GameObject gameCamera;
+
+	public GameObject panelBoard;
+
+	TimePack currentPack;
+	int currentTimeGame;
+	int nBoardsSolved = 0;
 
 	Board currentBoard;
 
-	float step = 2.5f;
+	GridLayoutGroup gridLayout;
+	DynamicGrid gridController;
+
+	Timer timer = new Timer();
 
 	float waitTimeStep = .1f;
 
@@ -25,73 +33,97 @@ public class GameManager : Singleton<GameManager> {
 
 	int scoreCount = 0;
 
-	bool isBusy = false;
-	bool retry = false;
-	bool gameEnded = false;
+	public bool isBusy = false;
 	#endregion
-	
+
 	#region SETUP
 	public void Initialize() {
-		InitializeCards();
-	}
+		gridController = panelBoard.GetComponent<DynamicGrid>();
+		gridLayout = panelBoard.GetComponent<GridLayoutGroup>();
 
-	void InitializeCards() {
 		int size = maxSize;
 
-		//cards = new TurnCard[size, size];
+		cards = new TurnCardUI[size, size];
 
 		for (int i = 0; i < size; ++i) {
 			for (int j = 0; j < size; ++j) {
-				GameObject go = Instantiate(cardPrefab, cardParent.transform, false);
-				go.transform.position = new Vector3(i * step, j * step, 0);
-				//cards[i, j] = go.GetComponent<TurnCard>();
-				//cards[i, j].Init(i, j);
+				GameObject go = Instantiate(cardPrefab, panelBoard.transform, false);
+				cards[i, j] = go.GetComponent<TurnCardUI>();
+				cards[i, j].Init(i, j);
 			}
 		}
 	}
 
-	public void InitializeGame(Board _board) {
-		currentBoard = _board;
-		
-		LoadBoardFromID(currentBoard.matrix);
+	public void InitializeTimedGame(TimePack _pack, int _time) {
+		Debug.Log("New Time Game: " + _time);
+		currentTimeGame = _time;
+		currentPack = _pack;
 
-		int size = currentBoard.GetBoardSize();
+		timer.StopTimer();
+		timer.timeout = currentTimeGame ;
+
+		nBoardsSolved = -1;
+		isBusy = false;
+
+		UIStartGame();
+
+		InitializeNextBoard();
+		
+		timer.StartTimer();
+	}
+
+	public void InitializeSameTimedGame() {
+		InitializeTimedGame(currentPack, currentTimeGame);
+	}
+
+	public void InitializeNextBoard() {
+		nBoardsSolved++;
+
+		currentBoard = Controller.instance.dataManager.data.GetRandomBoard(currentPack.boardSize);
+
+		if(currentBoard != null) {
+			InitializeBoard(currentBoard);
+
+			UISetLevel();
+		}
+		else {
+			UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+			//Application.LoadLevel(Application.loadedLevel);
+		}
+	}
+
+	void InitializeBoard(Board _board) {
+		currentBoard = _board;
+
+		int boardSize = currentBoard.GetBoardSize();
+
 		for (int i = 0; i < maxSize; ++i) {
 			for (int j = 0; j < maxSize; ++j) {
-				if(i < size && j < size)
+				if (i < boardSize && j < boardSize)
 					cards[i, j].gameObject.SetActive(true);
 				else
 					cards[i, j].gameObject.SetActive(false);
 			}
 		}
 
-		AdjustCamera();
-	}
+		gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+		gridLayout.constraintCount = boardSize;
+		float spaceSize = (panelBoard.GetComponent<RectTransform>().rect.size.x / (float)boardSize) * .125f;
+		gridLayout.spacing = Vector2.one * spaceSize;
 
-	void AdjustCamera() {
-		Camera cam = gameCamera.GetComponent<Camera>();
+		//Debug.Log();
+		gridController.AdjustCellSize(boardSize, boardSize);
 
-		int size = currentBoard.GetBoardSize();
-
-		cam.transform.position = new Vector3(((size - 1) * step) / 2,
-											 size == 4 ? 4.5f : size == 6 ? 7.25f : 10f,
-											 - 10);
-
-		float orthograficStep = size == 4 ? 9.75f : size == 6 ? 14.925f : 20.03125f;
-		cam.orthographicSize = orthograficStep;
+		LoadBoardFromID(currentBoard.matrix);
 	}
 
 	void GenerateRandomMatrix(int size) {
-		//int size = currentBoard.GetBoardSize();
-
 		currentBoardMaxWidth = size;
 		currentBoardMaxHeight = size;
 		currentBoardMinWidth = 0;
 		currentBoardMinHeight = 0;
 
 		scoreCount = 0;
-		//panelCurrentScore.SetActive(true);
-		//UpdateGUI_MovesCount();
 
 		string str = "";
 
@@ -113,20 +145,12 @@ public class GameManager : Singleton<GameManager> {
 			GenerateRandomMatrix(size);
 		}
 		else {
-			//boardMatrix = str;
-			//UpdateGUI_BoardID();
-
 			StartCoroutine(ResizeBorders(.5f));
 		}
 
-		//GameLog.StartGame(str, boardWidth, boardHeight);
-
-		gameEnded = false;
+		//GameLog.StartGame(str, size, size);
+		
 		isBusy = false;
-
-		//panelScore.SetActive(false);
-		//panelBottom.SetActive(true);
-		//textBoardID.gameObject.SetActive(true);
 	}
 
 	bool CheckIfIsValid() {
@@ -184,13 +208,11 @@ public class GameManager : Singleton<GameManager> {
 		currentBoardMinHeight = 0;
 
 		scoreCount = 0;
-		//panelCurrentScore.SetActive(true);
-		//UpdateGUI_MovesCount();
 
 		int x = 0;
 		int y = 0;
 		for (int i = 0; i < id.Length; ++i) {
-			cards[x, y].ResetCard();
+			cards[x, y].ResetCard(true);
 			if (id[i] == '0') {
 				cards[x, y].SetBack();
 			}
@@ -206,36 +228,102 @@ public class GameManager : Singleton<GameManager> {
 			}
 		}
 
-		//UpdateGUI_BoardID();
-
+		//TODO: Update Board Info
 		//GameDataWWW.GetBoardInfo(id, true);
 
-		//GameLog.StartGame(id, boardWidth, boardHeight);
-
-		gameEnded = false;
+		//GameLog.StartGame(id, size, size);
+		
 		isBusy = false;
-
-		//panelScore.SetActive(false);
-		//panelBottom.SetActive(true);
-		//textBoardID.gameObject.SetActive(true);
 
 		StartCoroutine(ResizeBorders(.5f));
 	}
 	#endregion
 
+	#region GAME_ACTIONS
+	public void ResetCurrentBoard() {
+		InitializeBoard(currentBoard);
+	}
+
+	public void PauseGame() {
+		timer.PauseTimer();
+		UIPauseGame(true);
+	}
+
+	public void ResumeGame() {
+		UIPauseGame(false);
+		timer.ResumeTimer();
+	}
+
+	public void StopGame() {
+		timer.StopTimer();
+	}
+	#endregion
+
+	#region UI
+	void UIStartGame() {
+		GUI_GameTimed.running_Panel_gameObject.SetActive(true);
+		GUI_GameTimed.running_info_Panel_gameObject.SetActive(true);
+
+		GUI_GameTimed.finish_Panel_gameObject.SetActive(false);
+		GUI_GameTimed.pause_Panel_gameObject.SetActive(false);
+
+		UIEnableBoard(true);
+	}
+
+	void UIEnableBoard(bool enable) {
+		GUI_GameTimed.board_Panel_gameObject.SetActive(enable);
+	}
+
+	void UISetLevel() {
+		GUI_GameTimed.running_info_text_solved_Text.text = "solved : " + nBoardsSolved;
+		int record = currentPack.GetRecord(currentTimeGame);
+
+		if (record < nBoardsSolved)
+			record = nBoardsSolved;
+
+		GUI_GameTimed.running_info_text_best_Text.text = "best : " + record;
+	}
+
+	void UIUpdateTime(int time) {
+
+		GUI_GameTimed.running_info_currentTime_Text.text = "" + time;
+	}
+
+	void UIPauseGame(bool enable) {
+		GUI_GameTimed.board_Panel_gameObject.SetActive(!enable);
+		GUI_GameTimed.running_Panel_gameObject.SetActive(!enable);
+		GUI_GameTimed.pause_Panel_gameObject.SetActive(enable);
+	}
+
+	void UIFinishGame() {
+		GUI_GameTimed.finish_Panel_gameObject.SetActive(true);
+		GUI_GameTimed.running_Panel_gameObject.SetActive(false);
+		GUI_GameTimed.board_Panel_gameObject.SetActive(false);
+
+		GUI_GameTimed.finish_score_currentScore_Text.text = "" + nBoardsSolved;
+
+		int record = currentPack.GetRecord(currentTimeGame);
+		if(record >= nBoardsSolved) {
+			GUI_GameTimed.finish_message_Panel_gameObject.SetActive(true);
+			GUI_GameTimed.finish_newRecord_Panel_gameObject.SetActive(false);
+			GUI_GameTimed.finish_score_diamond_Image_gameObject.transform.eulerAngles = new Vector3(0, 0, 0);
+		}
+		else {
+			GUI_GameTimed.finish_message_Panel_gameObject.SetActive(false);
+			GUI_GameTimed.finish_newRecord_Panel_gameObject.SetActive(true);
+			GUI_GameTimed.finish_score_diamond_Image_gameObject.transform.eulerAngles = new Vector3(0, 0, 45);
+		}
+	}
+	#endregion
+
 	#region GAME_LOGIC
-	void ProcessTouch(float touchX, float touchY) {
-		Ray ray = Camera.main.ScreenPointToRay(new Vector3(touchX, touchY, 0));
-		RaycastHit hit;
-
-		if (Physics.Raycast(ray, out hit) && hit.transform.gameObject.name.StartsWith("Card")) {
-			TurnCard card = hit.collider.GetComponent<TurnCard>();
-
+	public void ProcessTouch(TurnCardUI card) {
+		if (!isBusy) {
 			int x = card.posX;
 			int y = card.posY;
 
 			if (x < currentBoardMaxWidth && x >= currentBoardMinWidth &&
-			   y < currentBoardMaxHeight && y >= currentBoardMinHeight) {
+				y < currentBoardMaxHeight && y >= currentBoardMinHeight) {
 				Debug.Log("Flip(" + x + "," + y + ")");
 				isBusy = true;
 
@@ -252,8 +340,7 @@ public class GameManager : Singleton<GameManager> {
 
 				++scoreCount;
 
-				//UpdateGUI_MovesCount();
-
+				//UIUpdateCurrentResult();
 				//GameLog.AddMove(x, y);
 			}
 		}
@@ -285,6 +372,7 @@ public class GameManager : Singleton<GameManager> {
 			}
 		}
 	}
+
 	IEnumerator ResizeBorders(float waitTime = 0) {
 		yield return new WaitForSeconds(waitTime);
 
@@ -326,9 +414,7 @@ public class GameManager : Singleton<GameManager> {
 			else {
 				goto InitBottom;
 			}
-
 		}
-
 
 		InitTop:
 		ac = 0;
@@ -395,121 +481,65 @@ public class GameManager : Singleton<GameManager> {
 				goto InitRight;
 			}
 		}
-
-		//		GameObject.Find("Text_Moves").GetComponent<Text>().text = "" + 
-		//			 "Width[" + currentBoardMinWidth  + "," + currentBoardMaxWidth  + "]\n" + 
-		//			"Height[" + currentBoardMinHeight + "," + currentBoardMaxHeight + "]\n";
-
 		yield break;
 
 		EndGame:
-		gameEnded = true;
 
-		//EndGame();
+		InitializeNextBoard();
+	}
+
+	IEnumerator WaitNext() {
+		//yield return new WaitForSeconds(1);
+
+		Init:
+		for (int i = currentBoardMinWidth; i < currentBoardMaxWidth; ++i) {
+			for (int j = currentBoardMinHeight; j < currentBoardMaxHeight; ++j) {
+				if (cards[i, j].isBusy) {
+					yield return new WaitForSeconds(waitTimeStep);
+					goto Init;
+				}
+			}
+		}
+
+		isBusy = false;
+	}
+
+	void FinishGame() {
+		//Invoke("UIFinishGame", TurnCardUI.animationTime);
+		timer.StopTimer();
+
+		UIFinishGame();
+
+		int record = currentPack.GetRecord(currentTimeGame);
+		if(record < nBoardsSolved) {
+			currentPack.SetRecord(currentTimeGame, nBoardsSolved);
+			Controller.instance.dataManager.SaveLocalInfo();
+		}
 
 		//GameLog.EndGame();
-		//GameDataWWW.UpdateBoardInfo(
-		//	boardMatrix,
+		//Controller.instance.dataManager.UpdateBoardInfo(
+		//	currentBoard.matrix,
 		//	scoreCount,
 		//	GameLog.GetTime(),
 		//	GameLog.GetMoves()
 		//);
-
-		//GameData.SaveBoard(boardLevel, boardID);
-
-
-		//textTimerCountdown.text = "Next In 5";
-		//if (retry)
-		//	goto EndFunc;
-		//yield return new WaitForSeconds(1);
-		//if (retry)
-		//	goto EndFunc;
-		//textTimerCountdown.text = "Next In 4";
-		//yield return new WaitForSeconds(1);
-		//if (retry)
-		//	goto EndFunc;
-		//textTimerCountdown.text = "Next In 3";
-		//yield return new WaitForSeconds(1);
-		//if (retry)
-		//	goto EndFunc;
-		//textTimerCountdown.text = "Next In 2";
-		//yield return new WaitForSeconds(1);
-		//if (retry)
-		//	goto EndFunc;
-		//textTimerCountdown.text = "Next In 1";
-		//yield return new WaitForSeconds(1);
-		//if (retry)
-		//	goto EndFunc;
-		//textTimerCountdown.text = "Next\nIn 0";
-		//yield return new WaitForSeconds(.2f);
-
-
-		//if (retry) {
-		//	goto EndFunc;
-		//}
-		//else {
-		//	if (isRandom) {
-		//		GenerateRandomMatrix();
-		//	}
-		//	else {
-		//		GenerateNextMatrix();
-		//	}
-		//}
-
-		EndFunc:
-		retry = false;
-		yield break;
-	}
-
-	IEnumerator WaitNext() {
-		yield return new WaitForSeconds(1);
-		isBusy = false;
 	}
 	#endregion
 
 	#region UNITY_CALLBACKS
-	// Use this for initialization
-	void Start () {
-		//boardWidth = 8;
-		//boardHeight = 8;
+	private void FixedUpdate() {
+		if (timer.isRunning) {
+			float timeLeft = timer.CheckTimer();
 
-		//CreateCardMatrix();
-		//GenerateRandomMatrix();
+			if(timeLeft > 0) {
+				UIUpdateTime(Mathf.CeilToInt(timeLeft));
+			}
+			else {
+				UIUpdateTime(0);
 
-
-		//boardWidth = 6;
-		//boardHeight = 6;
-
-		//AdjustCamera();
-
-		//for (int i = 0; i < 8; ++i) {
-		//	for (int j = boardWidth; j < 8; ++j) {
-		//		cards[i, j].HideCard();
-		//		}
-		//}
-		//for (int j = 0; j < 8; ++j) {
-		//	for (int i = boardWidth; i < 8; ++i) {
-		//		cards[i, j].HideCard();
-		//	}
-		//}
-	}
-	
-	// Update is called once per frame
-	void Update () {
-#if UNITY_EDITOR
-		if (Input.GetMouseButtonDown(0)) {
-			if (!isBusy)
-				ProcessTouch(Input.mousePosition.x, Input.mousePosition.y);
-
+				FinishGame();
+			}
 		}
-#else
-		//if (Input.touchCount > 0/* && Input.touches[0].phase == TouchPhase.Began*/)
-		if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
-		{
-			if(!isBusy)
-				ProcessTouch(Input.GetTouch(0).position.x, Input.GetTouch(0).position.y);
-		}
-#endif
 	}
 	#endregion
 }

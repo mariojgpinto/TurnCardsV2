@@ -56,7 +56,7 @@
 
 		#endregion
 
-		#region FILES_GENERATION
+		#region FILES_GENERATION 
 		public static string text_classPrefix = "GUI_";
 
 		public static string file_init = "GUIGenerator_";
@@ -235,6 +235,8 @@
 		public static string text_function_ControllerStart_Full =
 				"\tprotected override void Awake(){\n" +
 				"\t\tbase.Awake();\n\n" +
+				"\t\tif (destroyed)\n" +
+				"\t\t\treturn;\n\n" +
 				//"\t\tPersistent = " + replacement_variable + ";\n\n" +
 				//"\t\tif(instance == null){\n" + 
 				//"\t\t\tinstance = this;\n" + 

@@ -34,13 +34,3 @@ public class Board {
 		return Mathf.FloorToInt(Mathf.Sqrt(matrix.Length));
 	}
 }
-
-
-[System.Serializable]
-public class GameBoard {
-	public Board board;
-
-	public int userMoves = 0;
-
-	public bool played = false;
-}

@@ -6,12 +6,12 @@ using System.Collections;
 public class GUI_Animation : MonoBehaviour {
 	#region VARIABLES
 	public static GUI_Animation instance;
-
-	public enum ANIMATION_TYPE {
-		SHOW_HIDE
-	}
-
 	#endregion
+
+	public static void SwitchMenus(GameObject menuFrom, GameObject menuTo) {
+		GUI_Animation.HideMenu(menuFrom);
+		GUI_Animation.ShowMenu(menuTo);
+	}
 
 	#region SHOW_HIDE
 	public static void ShowMenu(GameObject panel)
@@ -136,16 +136,6 @@ public class GUI_Animation : MonoBehaviour {
 	}
 
 	#endregion
-
-	public static void SwitchMenus(GameObject from, GameObject to, ANIMATION_TYPE animation = ANIMATION_TYPE.SHOW_HIDE) {
-		switch (animation) {
-			case ANIMATION_TYPE.SHOW_HIDE:
-			default:
-				GUI_Animation.HideMenu(from);
-				GUI_Animation.ShowMenu(to);
-				break;
-		}
-	}
 
 	#region UNITY_CALLBACKS
 	void Awake()

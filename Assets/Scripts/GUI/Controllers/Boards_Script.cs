@@ -12,42 +12,49 @@ public class Boards_Script : MonoBehaviour {
 	const int maxPerBoard = 30;
 
 	public GameObject panelScroll;
+
+	List<BoardListElem_Script> elements = new List<BoardListElem_Script>();
+
+	Pack currentPack;
 	#endregion
 
 	#region SETUP
-	public void Initialize(Pack pack) {
-		foreach (Transform t in panelScroll.transform)
-			Destroy(t.gameObject);
+	public void Initialize(Pack pack = null) {
+		if(pack != null)
+			currentPack = pack;
+		title.text = currentPack.title;
 
-		int ac = 0;
+		Debug.Log("Pack(" + currentPack.title + ") - " + currentPack.boards.Count);
 
-		title.text = pack.title;
+		if (elements.Count == 0) {
+			int ac = 0;
 
-		for (int i = 0; i < pack.boards.Count; ) {
-			GameObject board = Instantiate(prefabBoardSet, panelScroll.transform);
+			for (int i = 0; i < currentPack.boards.Count;) {
+				GameObject board = Instantiate(prefabBoardSet, panelScroll.transform);
 
-			//List<GameObject> elements = new List<GameObject>();
-			for (int j = 0; j < maxPerBoard && i < pack.boards.Count; ++j, ++i) {
-				GameObject boardElem = Instantiate(prefabBoardElem, board.transform.GetChild(1));
+				//List<GameObject> elements = new List<GameObject>();
+				for (int j = 0; j < maxPerBoard && i < currentPack.boards.Count; ++j, ++i) {
+					GameObject boardElem = Instantiate(prefabBoardElem, board.transform.GetChild(1));
 
-				boardElem.GetComponent<BoardListElem_Script>().Initialize(pack.boards[ac], ac);
+					boardElem.GetComponent<BoardListElem_Script>().Initialize(currentPack.boards[ac], ac);
+					elements.Add(boardElem.GetComponent<BoardListElem_Script>());
 
-				ac++;
+					ac++;
+				}
+
+				board.transform.localScale = Vector3.one;
 			}
-
-			board.transform.localScale = Vector3.one;
+		}
+		else {
+			for (int i = 0; i < currentPack.boards.Count && i < elements.Count; ++i) {
+				elements[i].Initialize(currentPack.boards[i], i);
+			}
 		}
 
-		//for(int i = 0; i < 100; ++i) {
-		//	GameObject board = Instantiate(prefabBoardSet, panelScroll.transform);
+		panelScroll.transform.parent.gameObject.GetComponent<UnityEngine.UI.Extensions.ScrollSnap>().ChangePage(0);
 
-		//	List<GameObject> elements = new List<GameObject>();
-		//	for (int j = 0; j < maxPerBoard && i < 100; ++j, ++i) {
-		//		GameObject boardElem = Instantiate(prefabBoardElem, board.transform.GetChild(1));
-		//	}
 
-		//	board.transform.localScale = Vector3.one;
-		//}
+		int completed = currentPack.GetCompleted();
 	}
 	#endregion
 

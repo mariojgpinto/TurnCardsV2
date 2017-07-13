@@ -24,7 +24,7 @@ public class AdmobManager : MonoBehaviour {
 	#endregion
 
 	#region SETUP
-	void Initialize() {
+	public void Initialize() {
 		InitializeBanner();
 
 		InitializeInterstitial();
@@ -179,9 +179,9 @@ public class AdmobManager : MonoBehaviour {
 
 	#region UNITY_CALLBACKS
 	// Use this for initialization
-	void Start () {
-		Initialize();
-	}
+	//void Start () {
+	//	Initialize();
+	//}
 
 	//// Update is called once per frame
 	//void Update () {

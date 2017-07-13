@@ -21,7 +21,8 @@ public class TimeBoardSizeElem_Script : MonoBehaviour {
 	}
 
 	private void SetSelectedSize(bool value) {
-		GUI_Controller.instance.gui_Time.GetComponent<Time_Script>().SetSelectedSize(pack);
+		if(value)
+			GUI_Controller.instance.gui_Time.GetComponent<Time_Script>().SetSelectedSize(pack);
 	}
 	#endregion
 }

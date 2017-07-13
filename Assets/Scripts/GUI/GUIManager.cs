@@ -16,7 +16,8 @@ public class GUIManager : Singleton<GUIManager> {
 		GUI_Controller.GUI_Levels_ButtonPressed += OnButton_Levels;
 		GUI_Controller.GUI_Time_ButtonPressed += OnButton_Time;
 		GUI_Controller.GUI_Boards_ButtonPressed += OnButton_Boards;
-		GUI_Controller.GUI_Game_ButtonPressed += OnButton_Game;
+		GUI_Controller.GUI_GameRegular_ButtonPressed += OnButton_GameRegular;
+		GUI_Controller.GUI_GameTimed_ButtonPressed += OnButton_GameTimed;
 
 		GUI_Controller.GUI_Settings_TogglePressed += OnToggle_Settings;
 
@@ -280,61 +281,90 @@ public class GUIManager : Singleton<GUIManager> {
 			case "top_back_Button": //BOARDS - BACK
 				Debug.Log(e.id + " - BOARDS - BUTTON BACK");
 				GUI_Animation.SwitchMenus(GUI_Controller.instance.gui_Boards, GUI_Controller.instance.gui_Levels);
+
+				GUI_Controller.instance.gui_Levels.GetComponent<Packs_Script>().Initialize();
 				break;
 			default:
 				break;
 		}
 	}
 
-	void OnButton_Game(object sender, ButtonPressedEventArgs e) {
+	void OnButton_GameRegular(object sender, ButtonPressedEventArgs e) {
 		switch (e.id) {
-			case "top_back_Button": //GAME - BACK
-				Debug.Log(e.id + " - GAME - BUTTON BACK");
-				GUI_Animation.SwitchMenus(GUI_Controller.instance.gui_Game, GUI_Controller.instance.gui_Boards);
+			case "top_back_Button": //GAMEREGULAR - BACK
+				Debug.Log(e.id + " - GAMEREGULAR - BUTTON BACK");
+				GUI_Animation.SwitchMenus(GUI_Controller.instance.gui_GameRegular, GUI_Controller.instance.gui_Boards);
+				GUI_Controller.instance.gui_Boards.GetComponent<Boards_Script>().Initialize();
 
 				break;
-			case "running_bottom_settings_Button": //GAME - SETTINGS
-				Debug.Log(e.id + " - GAME - BUTTON SETTINGS");
+			case "running_bottom_previous_Button": //GAMEREGULAR - PREVIOUS
+				Debug.Log(e.id + " - GAMEREGULAR - BUTTON PREVIOUS");
+				Controller.instance.gameRegular.InitializePreviousBoard();
+				break;
+			case "running_bottom_restart_Button": //GAMEREGULAR - RESTART
+				Debug.Log(e.id + " - GAMEREGULAR - BUTTON RESTART");
+				Controller.instance.gameRegular.InitializeSameBoard();
+				break;
+			case "running_bottom_next_Button": //GAMEREGULAR - NEXT
+				Debug.Log(e.id + " - GAMEREGULAR - BUTTON NEXT");
+				Controller.instance.gameRegular.InitializeNextBoard();
+				break;
+			case "finish_again_Button": //GAMEREGULAR - AGAIN
+				Debug.Log(e.id + " - GAMEREGULAR - BUTTON AGAIN");
+				Controller.instance.gameRegular.InitializeSameBoard();
+				break;
+			case "finish_next_Button": //GAMEREGULAR - NEXT
+				Debug.Log(e.id + " - GAMEREGULAR - BUTTON NEXT");
+				Controller.instance.gameRegular.InitializeNextBoard();
+				break;
+			default:
+				break;
+		}
+	}
+
+	void OnButton_GameTimed(object sender, ButtonPressedEventArgs e) {
+		switch (e.id) {
+			case "top_back_Button": //GAMETIMED - BACK
+				Debug.Log(e.id + " - GAMETIMED - BUTTON BACK");
+				GUI_Animation.SwitchMenus(GUI_Controller.instance.gui_GameTimed, GUI_Controller.instance.gui_Time);
+				Controller.instance.gameTimed.StopGame();
+				GUI_Controller.instance.gui_Time.GetComponent<Time_Script>().Initialize();
+				break;
+			case "running_bottom_reset_Button": //GAMETIMED - RESET
+				Debug.Log(e.id + " - GAMETIMED - BUTTON RESET");
+				Controller.instance.gameTimed.ResetCurrentBoard();
+				break;
+			case "running_bottom_pause_Button": //GAMETIMED - PAUSE
+				Debug.Log(e.id + " - GAMETIMED - BUTTON PAUSE");
+				Controller.instance.gameTimed.PauseGame();
+				break;
+			case "running_bottom_next_Button": //GAMETIMED - NEXT
+				Debug.Log(e.id + " - GAMETIMED - BUTTON NEXT");
+				Controller.instance.gameTimed.InitializeNextBoard();
+				break;
+			case "finish_again_Button": //GAMETIMED - AGAIN
+				Debug.Log(e.id + " - GAMETIMED - BUTTON AGAIN");
+				Controller.instance.gameTimed.InitializeSameTimedGame();
+				break;
+			case "finish_back_Button": //GAMETIMED - BACK
+				Debug.Log(e.id + " - GAMETIMED - BUTTON BACK");
+				GUI_Animation.SwitchMenus(GUI_Controller.instance.gui_GameTimed, GUI_Controller.instance.gui_Time);
+				GUI_Controller.instance.gui_Time.GetComponent<Time_Script>().Initialize();
+				break;
+			case "pause_sideClose_Button": //GAMETIMED - SIDECLOSE
+				Debug.Log(e.id + " - GAMETIMED - BUTTON SIDECLOSE");
+				Controller.instance.gameTimed.ResumeGame();
+				break;
+			case "pause_content_close_Button": //GAMETIMED - CLOSE
+				Debug.Log(e.id + " - GAMETIMED - BUTTON CLOSE");
+				Controller.instance.gameTimed.ResumeGame();
+				break;
+			case "pause_content_settings_Button": //GAMETIMED - SETTINGS
+				Debug.Log(e.id + " - GAMETIMED - BUTTON SETTINGS");
 
 				break;
-			case "running_bottom_restart_Button": //GAME - RESTART
-				Debug.Log(e.id + " - GAME - BUTTON RESTART");
-
-				break;
-			case "running_bottom_next_Button": //GAME - NEXT
-				Debug.Log(e.id + " - GAME - BUTTON NEXT");
-
-				break;
-			case "finish_again_Button": //GAME - AGAIN
-				Debug.Log(e.id + " - GAME - BUTTON AGAIN");
-
-				break;
-			case "finish_next_Button": //GAME - NEXT
-				Debug.Log(e.id + " - GAME - BUTTON NEXT");
-
-				break;
-			case "finishTimed_again_Button": //GAME - AGAIN
-				Debug.Log(e.id + " - GAME - BUTTON AGAIN");
-
-				break;
-			case "finishTimed_next_Button": //GAME - NEXT
-				Debug.Log(e.id + " - GAME - BUTTON NEXT");
-
-				break;
-			case "pause_sideClose_Button": //GAME - SIDECLOSE
-				Debug.Log(e.id + " - GAME - BUTTON SIDECLOSE");
-
-				break;
-			case "pause_content_close_Button": //GAME - CLOSE
-				Debug.Log(e.id + " - GAME - BUTTON CLOSE");
-
-				break;
-			case "pause_content_settings_Button": //GAME - SETTINGS
-				Debug.Log(e.id + " - GAME - BUTTON SETTINGS");
-
-				break;
-			case "pause_content_exit_Button": //GAME - EXIT
-				Debug.Log(e.id + " - GAME - BUTTON EXIT");
+			case "pause_content_exit_Button": //GAMETIMED - EXIT
+				Debug.Log(e.id + " - GAMETIMED - BUTTON EXIT");
 
 				break;
 			default:

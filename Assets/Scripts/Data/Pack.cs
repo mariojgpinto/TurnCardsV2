@@ -8,7 +8,7 @@ public class PackPage {
 	public int endIdx = -1;
 }
 [System.Serializable]
-public struct TimePackRecord {
+public class TimePackRecord {
 	public int time;
 	public int score;
 }
@@ -22,6 +22,24 @@ public class TimePack {
 	public TimePack(int _size) {
 		boardSize = _size;
 		title = "board (" + boardSize + "x" + boardSize + ")";
+	}
+
+	public int GetRecord(int time) {
+		for(int i = 0; i < records.Count; ++i) {
+			if (records[i].time == time) {
+				return records[i].score;
+			}
+		}
+
+		return 0;
+	}
+
+	public void SetRecord(int time, int record) {
+		for (int i = 0; i < records.Count; ++i) {
+			if (records[i].time == time) {
+				records[i].score = record;
+			}
+		}
 	}
 }
 
@@ -57,5 +75,29 @@ public class Pack {
 		}
 
 		return ac;
+	}
+
+	public Board GetNextBoard(Board previousBoard) {
+		for(int i = 0 ; i < boards.Count; ++i) {
+			if(boards[i].matrix == previousBoard.matrix) {
+				if (i + 1 < boards.Count)
+					return boards[i + 1];
+				else
+					return null;
+			}
+		}
+		return null;
+	}
+
+	public Board GetPreviousBoard(Board previousBoard) {
+		for (int i = 0; i < boards.Count; ++i) {
+			if (boards[i].matrix == previousBoard.matrix) {
+				if (i - 1 > 0)
+					return boards[i + 1];
+				else
+					return null;
+			}
+		}
+		return null;
 	}
 }

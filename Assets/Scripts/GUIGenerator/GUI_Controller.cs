@@ -13,7 +13,8 @@ public class GUI_Controller : Singleton<GUI_Controller> {
 	public GameObject gui_Levels;
 	public GameObject gui_Time;
 	public GameObject gui_Boards;
-	public GameObject gui_Game;
+	public GameObject gui_GameRegular;
+	public GameObject gui_GameTimed;
 
 	public static event EventHandler<ButtonPressedEventArgs> GUI_Main_ButtonPressed;
 
@@ -26,7 +27,9 @@ public class GUI_Controller : Singleton<GUI_Controller> {
 
 	public static event EventHandler<ButtonPressedEventArgs> GUI_Boards_ButtonPressed;
 
-	public static event EventHandler<ButtonPressedEventArgs> GUI_Game_ButtonPressed;
+	public static event EventHandler<ButtonPressedEventArgs> GUI_GameRegular_ButtonPressed;
+
+	public static event EventHandler<ButtonPressedEventArgs> GUI_GameTimed_ButtonPressed;
 
 	#endregion
 
@@ -51,8 +54,11 @@ public class GUI_Controller : Singleton<GUI_Controller> {
 				case "Panel_Boards":
 					gui_Boards = go;
 					break;
-				case "Panel_Game":
-					gui_Game = go;
+				case "Panel_GameRegular":
+					gui_GameRegular = go;
+					break;
+				case "Panel_GameTimed":
+					gui_GameTimed = go;
 					break;
 				default: break;
 			}
@@ -65,20 +71,23 @@ public class GUI_Controller : Singleton<GUI_Controller> {
 		gui_Levels.GetComponent<RectTransform>().localPosition = Vector3.zero;
 		gui_Time.GetComponent<RectTransform>().localPosition = Vector3.zero;
 		gui_Boards.GetComponent<RectTransform>().localPosition = Vector3.zero;
-		gui_Game.GetComponent<RectTransform>().localPosition = Vector3.zero;
+		gui_GameRegular.GetComponent<RectTransform>().localPosition = Vector3.zero;
+		gui_GameTimed.GetComponent<RectTransform>().localPosition = Vector3.zero;
 
 		GUI_Main.UpdateValues(gui_Main);
 		GUI_Settings.UpdateValues(gui_Settings);
 		GUI_Levels.UpdateValues(gui_Levels);
 		GUI_Time.UpdateValues(gui_Time);
 		GUI_Boards.UpdateValues(gui_Boards);
-		GUI_Game.UpdateValues(gui_Game);
+		GUI_GameRegular.UpdateValues(gui_GameRegular);
+		GUI_GameTimed.UpdateValues(gui_GameTimed);
 		gui_Main.gameObject.SetActive(true);
 		gui_Settings.gameObject.SetActive(false);
 		gui_Levels.gameObject.SetActive(false);
 		gui_Time.gameObject.SetActive(false);
 		gui_Boards.gameObject.SetActive(false);
-		gui_Game.gameObject.SetActive(false);
+		gui_GameRegular.gameObject.SetActive(false);
+		gui_GameTimed.gameObject.SetActive(false);
 	}
 
 	void InitializeListeners(){
@@ -132,18 +141,23 @@ public class GUI_Controller : Singleton<GUI_Controller> {
 
 		GUI_Boards.top_back_Button.onClick.AddListener(() => Event_OnButton_Boards("top_back_Button"));
 
-		GUI_Game.top_back_Button.onClick.AddListener(() => Event_OnButton_Game("top_back_Button"));
-		GUI_Game.running_bottom_settings_Button.onClick.AddListener(() => Event_OnButton_Game("running_bottom_settings_Button"));
-		GUI_Game.running_bottom_restart_Button.onClick.AddListener(() => Event_OnButton_Game("running_bottom_restart_Button"));
-		GUI_Game.running_bottom_next_Button.onClick.AddListener(() => Event_OnButton_Game("running_bottom_next_Button"));
-		GUI_Game.finish_again_Button.onClick.AddListener(() => Event_OnButton_Game("finish_again_Button"));
-		GUI_Game.finish_next_Button.onClick.AddListener(() => Event_OnButton_Game("finish_next_Button"));
-		GUI_Game.finishTimed_again_Button.onClick.AddListener(() => Event_OnButton_Game("finishTimed_again_Button"));
-		GUI_Game.finishTimed_next_Button.onClick.AddListener(() => Event_OnButton_Game("finishTimed_next_Button"));
-		GUI_Game.pause_sideClose_Button.onClick.AddListener(() => Event_OnButton_Game("pause_sideClose_Button"));
-		GUI_Game.pause_content_close_Button.onClick.AddListener(() => Event_OnButton_Game("pause_content_close_Button"));
-		GUI_Game.pause_content_settings_Button.onClick.AddListener(() => Event_OnButton_Game("pause_content_settings_Button"));
-		GUI_Game.pause_content_exit_Button.onClick.AddListener(() => Event_OnButton_Game("pause_content_exit_Button"));
+		GUI_GameRegular.top_back_Button.onClick.AddListener(() => Event_OnButton_GameRegular("top_back_Button"));
+		GUI_GameRegular.running_bottom_previous_Button.onClick.AddListener(() => Event_OnButton_GameRegular("running_bottom_previous_Button"));
+		GUI_GameRegular.running_bottom_restart_Button.onClick.AddListener(() => Event_OnButton_GameRegular("running_bottom_restart_Button"));
+		GUI_GameRegular.running_bottom_next_Button.onClick.AddListener(() => Event_OnButton_GameRegular("running_bottom_next_Button"));
+		GUI_GameRegular.finish_again_Button.onClick.AddListener(() => Event_OnButton_GameRegular("finish_again_Button"));
+		GUI_GameRegular.finish_next_Button.onClick.AddListener(() => Event_OnButton_GameRegular("finish_next_Button"));
+
+		GUI_GameTimed.top_back_Button.onClick.AddListener(() => Event_OnButton_GameTimed("top_back_Button"));
+		GUI_GameTimed.running_bottom_reset_Button.onClick.AddListener(() => Event_OnButton_GameTimed("running_bottom_reset_Button"));
+		GUI_GameTimed.running_bottom_pause_Button.onClick.AddListener(() => Event_OnButton_GameTimed("running_bottom_pause_Button"));
+		GUI_GameTimed.running_bottom_next_Button.onClick.AddListener(() => Event_OnButton_GameTimed("running_bottom_next_Button"));
+		GUI_GameTimed.finish_again_Button.onClick.AddListener(() => Event_OnButton_GameTimed("finish_again_Button"));
+		GUI_GameTimed.finish_back_Button.onClick.AddListener(() => Event_OnButton_GameTimed("finish_back_Button"));
+		GUI_GameTimed.pause_sideClose_Button.onClick.AddListener(() => Event_OnButton_GameTimed("pause_sideClose_Button"));
+		GUI_GameTimed.pause_content_close_Button.onClick.AddListener(() => Event_OnButton_GameTimed("pause_content_close_Button"));
+		GUI_GameTimed.pause_content_settings_Button.onClick.AddListener(() => Event_OnButton_GameTimed("pause_content_settings_Button"));
+		GUI_GameTimed.pause_content_exit_Button.onClick.AddListener(() => Event_OnButton_GameTimed("pause_content_exit_Button"));
 
 	}
 
@@ -315,43 +329,61 @@ public class GUI_Controller : Singleton<GUI_Controller> {
 		}
 	}
 
-	void Event_OnButton_Game(string id){
+	void Event_OnButton_GameRegular(string id){
 		switch(id){
-			case "top_back_Button" : //GAME - BACK
-				OnButtonPressed(id, "GAME - BUTTON BACK",GUI_Game_ButtonPressed);
+			case "top_back_Button" : //GAMEREGULAR - BACK
+				OnButtonPressed(id, "GAMEREGULAR - BUTTON BACK",GUI_GameRegular_ButtonPressed);
 				break;
-			case "running_bottom_settings_Button" : //GAME - SETTINGS
-				OnButtonPressed(id, "GAME - BUTTON SETTINGS",GUI_Game_ButtonPressed);
+			case "running_bottom_previous_Button" : //GAMEREGULAR - PREVIOUS
+				OnButtonPressed(id, "GAMEREGULAR - BUTTON PREVIOUS",GUI_GameRegular_ButtonPressed);
 				break;
-			case "running_bottom_restart_Button" : //GAME - RESTART
-				OnButtonPressed(id, "GAME - BUTTON RESTART",GUI_Game_ButtonPressed);
+			case "running_bottom_restart_Button" : //GAMEREGULAR - RESTART
+				OnButtonPressed(id, "GAMEREGULAR - BUTTON RESTART",GUI_GameRegular_ButtonPressed);
 				break;
-			case "running_bottom_next_Button" : //GAME - NEXT
-				OnButtonPressed(id, "GAME - BUTTON NEXT",GUI_Game_ButtonPressed);
+			case "running_bottom_next_Button" : //GAMEREGULAR - NEXT
+				OnButtonPressed(id, "GAMEREGULAR - BUTTON NEXT",GUI_GameRegular_ButtonPressed);
 				break;
-			case "finish_again_Button" : //GAME - AGAIN
-				OnButtonPressed(id, "GAME - BUTTON AGAIN",GUI_Game_ButtonPressed);
+			case "finish_again_Button" : //GAMEREGULAR - AGAIN
+				OnButtonPressed(id, "GAMEREGULAR - BUTTON AGAIN",GUI_GameRegular_ButtonPressed);
 				break;
-			case "finish_next_Button" : //GAME - NEXT
-				OnButtonPressed(id, "GAME - BUTTON NEXT",GUI_Game_ButtonPressed);
+			case "finish_next_Button" : //GAMEREGULAR - NEXT
+				OnButtonPressed(id, "GAMEREGULAR - BUTTON NEXT",GUI_GameRegular_ButtonPressed);
 				break;
-			case "finishTimed_again_Button" : //GAME - AGAIN
-				OnButtonPressed(id, "GAME - BUTTON AGAIN",GUI_Game_ButtonPressed);
+			default: break;
+		}
+	}
+
+	void Event_OnButton_GameTimed(string id){
+		switch(id){
+			case "top_back_Button" : //GAMETIMED - BACK
+				OnButtonPressed(id, "GAMETIMED - BUTTON BACK",GUI_GameTimed_ButtonPressed);
 				break;
-			case "finishTimed_next_Button" : //GAME - NEXT
-				OnButtonPressed(id, "GAME - BUTTON NEXT",GUI_Game_ButtonPressed);
+			case "running_bottom_reset_Button" : //GAMETIMED - RESET
+				OnButtonPressed(id, "GAMETIMED - BUTTON RESET",GUI_GameTimed_ButtonPressed);
 				break;
-			case "pause_sideClose_Button" : //GAME - SIDECLOSE
-				OnButtonPressed(id, "GAME - BUTTON SIDECLOSE",GUI_Game_ButtonPressed);
+			case "running_bottom_pause_Button" : //GAMETIMED - PAUSE
+				OnButtonPressed(id, "GAMETIMED - BUTTON PAUSE",GUI_GameTimed_ButtonPressed);
 				break;
-			case "pause_content_close_Button" : //GAME - CLOSE
-				OnButtonPressed(id, "GAME - BUTTON CLOSE",GUI_Game_ButtonPressed);
+			case "running_bottom_next_Button" : //GAMETIMED - NEXT
+				OnButtonPressed(id, "GAMETIMED - BUTTON NEXT",GUI_GameTimed_ButtonPressed);
 				break;
-			case "pause_content_settings_Button" : //GAME - SETTINGS
-				OnButtonPressed(id, "GAME - BUTTON SETTINGS",GUI_Game_ButtonPressed);
+			case "finish_again_Button" : //GAMETIMED - AGAIN
+				OnButtonPressed(id, "GAMETIMED - BUTTON AGAIN",GUI_GameTimed_ButtonPressed);
 				break;
-			case "pause_content_exit_Button" : //GAME - EXIT
-				OnButtonPressed(id, "GAME - BUTTON EXIT",GUI_Game_ButtonPressed);
+			case "finish_back_Button" : //GAMETIMED - BACK
+				OnButtonPressed(id, "GAMETIMED - BUTTON BACK",GUI_GameTimed_ButtonPressed);
+				break;
+			case "pause_sideClose_Button" : //GAMETIMED - SIDECLOSE
+				OnButtonPressed(id, "GAMETIMED - BUTTON SIDECLOSE",GUI_GameTimed_ButtonPressed);
+				break;
+			case "pause_content_close_Button" : //GAMETIMED - CLOSE
+				OnButtonPressed(id, "GAMETIMED - BUTTON CLOSE",GUI_GameTimed_ButtonPressed);
+				break;
+			case "pause_content_settings_Button" : //GAMETIMED - SETTINGS
+				OnButtonPressed(id, "GAMETIMED - BUTTON SETTINGS",GUI_GameTimed_ButtonPressed);
+				break;
+			case "pause_content_exit_Button" : //GAMETIMED - EXIT
+				OnButtonPressed(id, "GAMETIMED - BUTTON EXIT",GUI_GameTimed_ButtonPressed);
 				break;
 			default: break;
 		}
@@ -386,6 +418,9 @@ public class GUI_Controller : Singleton<GUI_Controller> {
 	#region UNITY_CALLBACKS
 	protected override void Awake(){
 		base.Awake();
+
+		if (destroyed)
+			return;
 
 		FindGameObjects();
 
@@ -651,54 +686,76 @@ public class GUI_Controller : Singleton<GUI_Controller> {
 //		}
 //	}
 
-//	void OnButton_Game(object sender, ButtonPressedEventArgs e){
+//	void OnButton_GameRegular(object sender, ButtonPressedEventArgs e){
 //		switch(e.id){
-//			case "top_back_Button" : //GAME - BACK
-//				Debug.Log(e.id + " - GAME - BUTTON BACK");
+//			case "top_back_Button" : //GAMEREGULAR - BACK
+//				Debug.Log(e.id + " - GAMEREGULAR - BUTTON BACK");
 
 //				break;
-//			case "running_bottom_settings_Button" : //GAME - SETTINGS
-//				Debug.Log(e.id + " - GAME - BUTTON SETTINGS");
+//			case "running_bottom_previous_Button" : //GAMEREGULAR - PREVIOUS
+//				Debug.Log(e.id + " - GAMEREGULAR - BUTTON PREVIOUS");
 
 //				break;
-//			case "running_bottom_restart_Button" : //GAME - RESTART
-//				Debug.Log(e.id + " - GAME - BUTTON RESTART");
+//			case "running_bottom_restart_Button" : //GAMEREGULAR - RESTART
+//				Debug.Log(e.id + " - GAMEREGULAR - BUTTON RESTART");
 
 //				break;
-//			case "running_bottom_next_Button" : //GAME - NEXT
-//				Debug.Log(e.id + " - GAME - BUTTON NEXT");
+//			case "running_bottom_next_Button" : //GAMEREGULAR - NEXT
+//				Debug.Log(e.id + " - GAMEREGULAR - BUTTON NEXT");
 
 //				break;
-//			case "finish_again_Button" : //GAME - AGAIN
-//				Debug.Log(e.id + " - GAME - BUTTON AGAIN");
+//			case "finish_again_Button" : //GAMEREGULAR - AGAIN
+//				Debug.Log(e.id + " - GAMEREGULAR - BUTTON AGAIN");
 
 //				break;
-//			case "finish_next_Button" : //GAME - NEXT
-//				Debug.Log(e.id + " - GAME - BUTTON NEXT");
+//			case "finish_next_Button" : //GAMEREGULAR - NEXT
+//				Debug.Log(e.id + " - GAMEREGULAR - BUTTON NEXT");
 
 //				break;
-//			case "finishTimed_again_Button" : //GAME - AGAIN
-//				Debug.Log(e.id + " - GAME - BUTTON AGAIN");
+//			default: break;
+//		}
+//	}
+
+//	void OnButton_GameTimed(object sender, ButtonPressedEventArgs e){
+//		switch(e.id){
+//			case "top_back_Button" : //GAMETIMED - BACK
+//				Debug.Log(e.id + " - GAMETIMED - BUTTON BACK");
 
 //				break;
-//			case "finishTimed_next_Button" : //GAME - NEXT
-//				Debug.Log(e.id + " - GAME - BUTTON NEXT");
+//			case "running_bottom_reset_Button" : //GAMETIMED - RESET
+//				Debug.Log(e.id + " - GAMETIMED - BUTTON RESET");
 
 //				break;
-//			case "pause_sideClose_Button" : //GAME - SIDECLOSE
-//				Debug.Log(e.id + " - GAME - BUTTON SIDECLOSE");
+//			case "running_bottom_pause_Button" : //GAMETIMED - PAUSE
+//				Debug.Log(e.id + " - GAMETIMED - BUTTON PAUSE");
 
 //				break;
-//			case "pause_content_close_Button" : //GAME - CLOSE
-//				Debug.Log(e.id + " - GAME - BUTTON CLOSE");
+//			case "running_bottom_next_Button" : //GAMETIMED - NEXT
+//				Debug.Log(e.id + " - GAMETIMED - BUTTON NEXT");
 
 //				break;
-//			case "pause_content_settings_Button" : //GAME - SETTINGS
-//				Debug.Log(e.id + " - GAME - BUTTON SETTINGS");
+//			case "finish_again_Button" : //GAMETIMED - AGAIN
+//				Debug.Log(e.id + " - GAMETIMED - BUTTON AGAIN");
 
 //				break;
-//			case "pause_content_exit_Button" : //GAME - EXIT
-//				Debug.Log(e.id + " - GAME - BUTTON EXIT");
+//			case "finish_back_Button" : //GAMETIMED - BACK
+//				Debug.Log(e.id + " - GAMETIMED - BUTTON BACK");
+
+//				break;
+//			case "pause_sideClose_Button" : //GAMETIMED - SIDECLOSE
+//				Debug.Log(e.id + " - GAMETIMED - BUTTON SIDECLOSE");
+
+//				break;
+//			case "pause_content_close_Button" : //GAMETIMED - CLOSE
+//				Debug.Log(e.id + " - GAMETIMED - BUTTON CLOSE");
+
+//				break;
+//			case "pause_content_settings_Button" : //GAMETIMED - SETTINGS
+//				Debug.Log(e.id + " - GAMETIMED - BUTTON SETTINGS");
+
+//				break;
+//			case "pause_content_exit_Button" : //GAMETIMED - EXIT
+//				Debug.Log(e.id + " - GAMETIMED - BUTTON EXIT");
 
 //				break;
 //			default: break;
@@ -711,7 +768,8 @@ public class GUI_Controller : Singleton<GUI_Controller> {
 //		GUI_Controller.GUI_Levels_ButtonPressed += OnButton_Levels;
 //		GUI_Controller.GUI_Time_ButtonPressed += OnButton_Time;
 //		GUI_Controller.GUI_Boards_ButtonPressed += OnButton_Boards;
-//		GUI_Controller.GUI_Game_ButtonPressed += OnButton_Game;
+//		GUI_Controller.GUI_GameRegular_ButtonPressed += OnButton_GameRegular;
+//		GUI_Controller.GUI_GameTimed_ButtonPressed += OnButton_GameTimed;
 
 //		GUI_Controller.GUI_Settings_TogglePressed += OnToggle_Settings;
 //	}

@@ -7,30 +7,33 @@ using MPAssets;
 [Prefab("Controller", true)]
 public class Controller : Singleton<Controller> {
 	#region VARIABLES
-	DataManager dataManager;
+	public DataManager dataManager;
 
-	GUIManager uiManager;
+	public GUIManager uiManager;
 
-	GameManager gameManager;
+	public AdmobManager admob;
 
-	AdmobManager admob;
+	public GameRegular_Script gameRegular;
+	public GameTimed_Script gameTimed;
 	#endregion
 
 	#region SETUP
 	public void Initialize() {
 		dataManager = this.GetComponent<DataManager>();
 		uiManager = this.GetComponent<GUIManager>();
-		gameManager = this.GetComponent<GameManager>();
 		admob = this.GetComponent<AdmobManager>();
-
 
 		dataManager.InitializeData();
 
 		dataManager.LoadRemoteInfo();
 
-		gameManager.Initialize();
+		gameRegular = GUI_Controller.instance.gui_GameRegular.GetComponent<GameRegular_Script>();
+		gameRegular.Initialize();
 
-		//admob.
+		gameTimed = GUI_Controller.instance.gui_GameTimed.GetComponent<GameTimed_Script>();
+		gameTimed.Initialize();
+
+		//admob.Initialize();
 
 		StartCoroutine(WaitLoading());
 	}
@@ -60,16 +63,20 @@ public class Controller : Singleton<Controller> {
 	#endregion
 
 	#region CALLBACKS
-	public void StartGame(Board board) {
+	public void StartRegularGame(string level, Board board) {
 		Debug.Log("Start Game - " + board.matrix);
-		GUI_Animation.SwitchMenus(GUI_Controller.instance.gui_Boards, GUI_Controller.instance.gui_Game);
+		GUI_Animation.SwitchMenus(GUI_Controller.instance.gui_Boards, GUI_Controller.instance.gui_GameRegular);
 
-		gameManager.InitializeGame(board);
+		int lvl = System.Convert.ToInt32(level);
+		gameRegular.InitializeNewBoard(lvl, board);
 	}
 
 	public void StartTimedGame(TimePack pack, int time) {
 		Debug.Log("Start Timed Game (" + pack.boardSize + "," + pack.boardSize + ") - " + time + "seconds");
-		GUI_Animation.SwitchMenus(GUI_Controller.instance.gui_Time, GUI_Controller.instance.gui_Game);
+		GUI_Animation.SwitchMenus(GUI_Controller.instance.gui_Time, GUI_Controller.instance.gui_GameTimed);
+
+		gameTimed.InitializeTimedGame(pack, time);
+		//gameRegular.InitializeTimedGame(pack, time);
 	}
 	#endregion
 
@@ -78,7 +85,7 @@ public class Controller : Singleton<Controller> {
 	void Start() {
 		Initialize();
 
-		GUI_Animation.SwitchMenus(GUI_Controller.instance.gui_Main, GUI_Controller.instance.gui_Game);
+		//GUI_Animation.SwitchMenus(GUI_Controller.instance.gui_Main, GUI_Controller.instance.gui_Game);
 
 		//TimePack t = new TimePack(4);
 		//t.records.Add(new TimePackRecord() { time = 30, score = 0 });

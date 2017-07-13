@@ -8,10 +8,14 @@ public class DynamicGrid : MonoBehaviour {
 	public bool square = true;
 
 	private void OnRectTransformDimensionsChange() {
-		AdjustCellSize();
+		AdjustCellSize(col, row, square);
 	}
 
-	public void AdjustCellSize() {
+	public void AdjustCellSize(int _col, int _row, bool _square = false) {
+		col = _col;
+		row = _row;
+		square = _square;
+
 		RectTransform parent = gameObject.GetComponent<RectTransform>();
 		GridLayoutGroup grid = gameObject.GetComponent<GridLayoutGroup>();
 		
