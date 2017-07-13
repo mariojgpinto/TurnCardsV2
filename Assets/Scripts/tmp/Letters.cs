@@ -6,9 +6,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Text))]
 public class Letters : MonoBehaviour {
 	public float animationTime = .5f;
-	Text text;
-	string originalText;
-
+	Text text = null;
 
 	public void Appear() {
 		StartCoroutine(Appear_routine());
@@ -19,8 +17,9 @@ public class Letters : MonoBehaviour {
 	}
 
 	IEnumerator Appear_routine() {
-		float deltaWait = animationTime / text.text.Length;
+		string originalText = text.text;
 
+		float deltaWait = animationTime / originalText.Length;
 		text.text = "";
 		for (int i = 0; i < originalText.Length; ++i) {
 			text.text = text.text + originalText[i];
@@ -31,6 +30,7 @@ public class Letters : MonoBehaviour {
 	}
 
 	IEnumerator Disappear_routine() {
+		string originalText = text.text;
 		float deltaWait = animationTime / text.text.Length;
 
 		text.text = originalText;
@@ -43,10 +43,18 @@ public class Letters : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void Start () {
+	void Start() {
 		text = this.GetComponent<Text>();
-		originalText = text.text;
 
 		Appear();
+	}
+
+	//private void OnDisable() {
+	//	Debug.Log("Text Invisible - " + text.text);
+	//}
+
+	private void OnEnable() {
+		if(text != null)
+			Appear();
 	}
 }
