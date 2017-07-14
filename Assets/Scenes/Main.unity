@@ -3096,7 +3096,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 162546876}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9e85440eb6e84b49a5b3264da60c44c, type: 3}
   m_Name: 
@@ -4018,7 +4018,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 206537501}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9e85440eb6e84b49a5b3264da60c44c, type: 3}
   m_Name: 
@@ -5123,7 +5123,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &243327621
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12576,7 +12576,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1.5
-  m_Text: Do you want to change the settings or quit this game?
+  m_Text: 'your game is paused.
+
+    if you quit, your current progress will be lost.'
 --- !u!222 &616445277
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -20918,7 +20920,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1057483013}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9e85440eb6e84b49a5b3264da60c44c, type: 3}
   m_Name: 
@@ -27407,7 +27409,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1362098181}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9e85440eb6e84b49a5b3264da60c44c, type: 3}
   m_Name: 
@@ -28429,7 +28431,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1444225249}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9e85440eb6e84b49a5b3264da60c44c, type: 3}
   m_Name: 
@@ -32975,7 +32977,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: settings
+  m_Text: continue
 --- !u!222 &1671527062
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -34570,7 +34572,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: exit
+  m_Text: quit
 --- !u!222 &1749505219
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -38227,7 +38229,7 @@ GameObject:
   - component: {fileID: 1980603922}
   - component: {fileID: 1980603921}
   m_Layer: 5
-  m_Name: Button_Settings
+  m_Name: Button_Continue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40262,7 +40264,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2065843249}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9e85440eb6e84b49a5b3264da60c44c, type: 3}
   m_Name: 

@@ -27,6 +27,8 @@ public class GUIManager : Singleton<GUIManager> {
 	public void InitializeGUI() {
 		//INITIALIZE GAME TYPE MENUS
 		GUI_Controller.instance.gui_Levels.GetComponent<Packs_Script>().Initialize();
+		if(Controller.instance.dataManager.data.packs[0] != null)
+			GUI_Controller.instance.gui_Boards.GetComponent<Boards_Script>().Initialize(Controller.instance.dataManager.data.packs[0]);
 
 		//INITIALIZE BOARDS PAGES
 	}
@@ -340,7 +342,7 @@ public class GUIManager : Singleton<GUIManager> {
 				break;
 			case "running_bottom_next_Button": //GAMETIMED - NEXT
 				Debug.Log(e.id + " - GAMETIMED - BUTTON NEXT");
-				Controller.instance.gameTimed.InitializeNextBoard();
+				Controller.instance.gameTimed.InitializeNextBoard(true);
 				break;
 			case "finish_again_Button": //GAMETIMED - AGAIN
 				Debug.Log(e.id + " - GAMETIMED - BUTTON AGAIN");
@@ -359,13 +361,15 @@ public class GUIManager : Singleton<GUIManager> {
 				Debug.Log(e.id + " - GAMETIMED - BUTTON CLOSE");
 				Controller.instance.gameTimed.ResumeGame();
 				break;
-			case "pause_content_settings_Button": //GAMETIMED - SETTINGS
-				Debug.Log(e.id + " - GAMETIMED - BUTTON SETTINGS");
-
+			case "pause_content_continue_Button": //GAMETIMED - CONTINUE
+				Debug.Log(e.id + " - GAMETIMED - BUTTON CONTINUE");
+				Controller.instance.gameTimed.ResumeGame();
 				break;
 			case "pause_content_exit_Button": //GAMETIMED - EXIT
 				Debug.Log(e.id + " - GAMETIMED - BUTTON EXIT");
-
+				GUI_Animation.SwitchMenus(GUI_Controller.instance.gui_GameTimed, GUI_Controller.instance.gui_Time);
+				Controller.instance.gameTimed.StopGame();
+				GUI_Controller.instance.gui_Time.GetComponent<Time_Script>().Initialize();
 				break;
 			default:
 				break;

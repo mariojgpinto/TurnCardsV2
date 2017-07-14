@@ -76,8 +76,9 @@ public class GameTimed_Script : MonoBehaviour {
 		InitializeTimedGame(currentPack, currentTimeGame);
 	}
 
-	public void InitializeNextBoard() {
-		nBoardsSolved++;
+	public void InitializeNextBoard(bool skip = false) {
+		if(!skip)
+			nBoardsSolved++;
 
 		currentBoard = Controller.instance.dataManager.data.GetRandomBoard(currentPack.boardSize);
 
@@ -256,6 +257,7 @@ public class GameTimed_Script : MonoBehaviour {
 
 	public void StopGame() {
 		timer.StopTimer();
+		Time.timeScale = 1;
 	}
 	#endregion
 
@@ -265,9 +267,12 @@ public class GameTimed_Script : MonoBehaviour {
 		GUI_GameTimed.running_info_Panel_gameObject.SetActive(true);
 
 		GUI_GameTimed.finish_Panel_gameObject.SetActive(false);
-		GUI_GameTimed.pause_Panel_gameObject.SetActive(false);
+
+		UIPauseGame(false);
 
 		UIEnableBoard(true);
+
+		Time.timeScale = 1;
 	}
 
 	void UIEnableBoard(bool enable) {
@@ -290,7 +295,11 @@ public class GameTimed_Script : MonoBehaviour {
 	}
 
 	void UIPauseGame(bool enable) {
-		GUI_GameTimed.board_Panel_gameObject.SetActive(!enable);
+		Vector3 oldPos = GUI_GameTimed.board_Panel_gameObject.transform.localPosition;
+		GUI_GameTimed.board_Panel_gameObject.transform.localPosition = new Vector3(enable ? Screen.width * 2 : 0, oldPos.y, oldPos.z);
+
+		Time.timeScale = enable ? 0 : 1;
+
 		GUI_GameTimed.running_Panel_gameObject.SetActive(!enable);
 		GUI_GameTimed.pause_Panel_gameObject.SetActive(enable);
 	}

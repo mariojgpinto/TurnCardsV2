@@ -121,11 +121,11 @@ public class GUI_GameTimed : MonoBehaviour {
 	public static GameObject				pause_content_description_Text_gameObject;
 	public static UnityEngine.UI.Text		pause_content_description_Text;
 
-	public static GameObject				pause_content_settings_Button_gameObject;
-	public static UnityEngine.UI.Button		pause_content_settings_Button;
+	public static GameObject				pause_content_continue_Button_gameObject;
+	public static UnityEngine.UI.Button		pause_content_continue_Button;
 
-	public static GameObject				pause_content_settings_title_Text_gameObject;
-	public static UnityEngine.UI.Text		pause_content_settings_title_Text;
+	public static GameObject				pause_content_continue_title_Text_gameObject;
+	public static UnityEngine.UI.Text		pause_content_continue_title_Text;
 
 	public static GameObject				pause_content_exit_Button_gameObject;
 	public static UnityEngine.UI.Button		pause_content_exit_Button;
@@ -244,11 +244,11 @@ public class GUI_GameTimed : MonoBehaviour {
 		pause_content_description_Text_gameObject = pause_content_Panel_gameObject.transform.Find("Text_Description").gameObject;
 		pause_content_description_Text = pause_content_description_Text_gameObject.GetComponent<UnityEngine.UI.Text>();
 
-		pause_content_settings_Button_gameObject = pause_content_Panel_gameObject.transform.Find("Button_Settings").gameObject;
-		pause_content_settings_Button = pause_content_settings_Button_gameObject.GetComponent<UnityEngine.UI.Button>();
+		pause_content_continue_Button_gameObject = pause_content_Panel_gameObject.transform.Find("Button_Continue").gameObject;
+		pause_content_continue_Button = pause_content_continue_Button_gameObject.GetComponent<UnityEngine.UI.Button>();
 
-		pause_content_settings_title_Text_gameObject = pause_content_settings_Button_gameObject.transform.Find("Text_Title").gameObject;
-		pause_content_settings_title_Text = pause_content_settings_title_Text_gameObject.GetComponent<UnityEngine.UI.Text>();
+		pause_content_continue_title_Text_gameObject = pause_content_continue_Button_gameObject.transform.Find("Text_Title").gameObject;
+		pause_content_continue_title_Text = pause_content_continue_title_Text_gameObject.GetComponent<UnityEngine.UI.Text>();
 
 		pause_content_exit_Button_gameObject = pause_content_Panel_gameObject.transform.Find("Button_Exit").gameObject;
 		pause_content_exit_Button = pause_content_exit_Button_gameObject.GetComponent<UnityEngine.UI.Button>();

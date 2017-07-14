@@ -156,7 +156,7 @@ public class GUI_Controller : Singleton<GUI_Controller> {
 		GUI_GameTimed.finish_back_Button.onClick.AddListener(() => Event_OnButton_GameTimed("finish_back_Button"));
 		GUI_GameTimed.pause_sideClose_Button.onClick.AddListener(() => Event_OnButton_GameTimed("pause_sideClose_Button"));
 		GUI_GameTimed.pause_content_close_Button.onClick.AddListener(() => Event_OnButton_GameTimed("pause_content_close_Button"));
-		GUI_GameTimed.pause_content_settings_Button.onClick.AddListener(() => Event_OnButton_GameTimed("pause_content_settings_Button"));
+		GUI_GameTimed.pause_content_continue_Button.onClick.AddListener(() => Event_OnButton_GameTimed("pause_content_continue_Button"));
 		GUI_GameTimed.pause_content_exit_Button.onClick.AddListener(() => Event_OnButton_GameTimed("pause_content_exit_Button"));
 
 	}
@@ -379,8 +379,8 @@ public class GUI_Controller : Singleton<GUI_Controller> {
 			case "pause_content_close_Button" : //GAMETIMED - CLOSE
 				OnButtonPressed(id, "GAMETIMED - BUTTON CLOSE",GUI_GameTimed_ButtonPressed);
 				break;
-			case "pause_content_settings_Button" : //GAMETIMED - SETTINGS
-				OnButtonPressed(id, "GAMETIMED - BUTTON SETTINGS",GUI_GameTimed_ButtonPressed);
+			case "pause_content_continue_Button" : //GAMETIMED - CONTINUE
+				OnButtonPressed(id, "GAMETIMED - BUTTON CONTINUE",GUI_GameTimed_ButtonPressed);
 				break;
 			case "pause_content_exit_Button" : //GAMETIMED - EXIT
 				OnButtonPressed(id, "GAMETIMED - BUTTON EXIT",GUI_GameTimed_ButtonPressed);
@@ -750,8 +750,8 @@ public class GUI_Controller : Singleton<GUI_Controller> {
 //				Debug.Log(e.id + " - GAMETIMED - BUTTON CLOSE");
 
 //				break;
-//			case "pause_content_settings_Button" : //GAMETIMED - SETTINGS
-//				Debug.Log(e.id + " - GAMETIMED - BUTTON SETTINGS");
+//			case "pause_content_continue_Button" : //GAMETIMED - CONTINUE
+//				Debug.Log(e.id + " - GAMETIMED - BUTTON CONTINUE");
 
 //				break;
 //			case "pause_content_exit_Button" : //GAMETIMED - EXIT
